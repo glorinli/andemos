@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SlideChoiceBar">
+        <attr name="barBackground" format="reference" />
+        <attr name="barHeight" format="dimension|reference" />
+        <attr name="indicator" format="reference" />
+        <attr name="indicatorSize" format="dimension|reference" />
+        <attr name="activeColor" format="color|reference" />
+        <attr name="inactiveColor" format="color|reference" />
+        <attr name="entryTextSize" format="dimension|reference" />
+        <attr name="entries" format="reference" />
+    </declare-styleable>
+</resources>

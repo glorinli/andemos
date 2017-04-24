@@ -17,7 +17,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".views.SeekBarActivity"/>
+        <activity android:name=".activities.SeekBarActivity"/>
+
+        <activity android:name=".activities.SlideChoiceBarActivity" />
     </application>
 
 </manifest>

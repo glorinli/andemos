@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="scb_textSize">12sp</dimen>
+    <dimen name="scb_barHeight">3dp</dimen>
+    <dimen name="scb_indicatorSize">24dp</dimen>
+</resources>

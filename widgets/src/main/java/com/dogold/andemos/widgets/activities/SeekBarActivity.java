@@ -1,4 +1,4 @@
-package com.dogold.andemos.widgets.views;
+package com.dogold.andemos.widgets.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
