@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Scroller;
 
 import com.dogold.andemos.widgets.R;
+import com.dogold.andemos.widgets.utils.EvaluateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,9 +133,10 @@ public class SlideChoiceBar extends View {
             public boolean onDown(MotionEvent e) {
                 float y = e.getY();
                 float x = e.getX();
-                if (y >= mIndicatorBound.top && y <= mIndicatorBound.bottom && x >= mIndicatorLeftMax && x <= mIndicatorRightMax) {
+                int halfIndicatorSize = mSlideIndicatorSize / 2;
+                if (y >= mIndicatorBound.top && y <= mIndicatorBound.bottom && x >= mIndicatorLeftMax - halfIndicatorSize && x <= mIndicatorRightMax + halfIndicatorSize) {
                     mDragging = true;
-                    moveIndicator(x);
+                    moveIndicator(EvaluateUtils.between(mIndicatorLeftMax, mIndicatorRightMax, x));
                 } else {
                     mDragging = false;
                 }
@@ -176,9 +178,14 @@ public class SlideChoiceBar extends View {
 
         for (int i = 0; i < mEntries.size(); i++) {
             float distance = Math.abs(currentPosition - i);
-            float scale = mEntrySelectedScale - distance * (mEntrySelectedScale - 1); // The farther, the smaller
-            mEntries.get(i).scale = Math.min(mEntrySelectedScale, Math.max(1, scale));
+            float fraction = EvaluateUtils.between(0, 1, distance);
+            float scale = EvaluateUtils.evaluateFloat(mEntrySelectedScale, 1, fraction); // The farther, the smaller
 
+            Entry entry = mEntries.get(i);
+
+            entry.scale = Math.min(mEntrySelectedScale, Math.max(1, scale));
+
+            entry.textColor = EvaluateUtils.evaluateColor(fraction, mActiveColor, mInactiveColor);
         }
     }
 
@@ -273,7 +280,7 @@ public class SlideChoiceBar extends View {
         // Draw entries
         for (Entry e : mEntries) {
             RectF r = e.bound;
-            mPaint.setColor(mActiveColor);
+            mPaint.setColor(e.textColor);
             mPaint.setTextSize(mTextSize * e.scale);
             canvas.drawText(e.text, r.centerX(), r.bottom, mPaint);
         }
@@ -285,5 +292,6 @@ public class SlideChoiceBar extends View {
         float textWidth;
         float textHeight;
         float scale;
+        int textColor;
     }
 }
