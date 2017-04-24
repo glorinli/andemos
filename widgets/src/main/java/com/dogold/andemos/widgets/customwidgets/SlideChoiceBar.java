@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -18,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Scroller;
 
+import com.dogold.andemos.widgets.BuildConfig;
 import com.dogold.andemos.widgets.R;
 import com.dogold.andemos.widgets.utils.EvaluateUtils;
 
@@ -86,28 +88,36 @@ public class SlideChoiceBar extends View {
             Resources resources = getResources();
             Resources.Theme theme = getContext().getTheme();
 
-            mActiveColor = a.getColor(R.styleable.SlideChoiceBar_activeColor, Color.WHITE);
-            mInactiveColor = a.getColor(R.styleable.SlideChoiceBar_inactiveColor, Color.GRAY);
-            mTextSize = a.getDimensionPixelSize(R.styleable.SlideChoiceBar_entryTextSize, resources.getDimensionPixelSize(R.dimen.scb_textSize));
+            mActiveColor = a.getColor(R.styleable.SlideChoiceBar_scb_activeColor, Color.WHITE);
+            mInactiveColor = a.getColor(R.styleable.SlideChoiceBar_scb_inactiveColor, Color.GRAY);
+            mTextSize = a.getDimensionPixelSize(R.styleable.SlideChoiceBar_scb_entryTextSize, resources.getDimensionPixelSize(R.dimen.scb_textSize));
 
             if (mTextSize > 0) {
                 mPaint.setTextSize(mTextSize);
             }
 
-            mSlideBarHeight = a.getDimensionPixelSize(R.styleable.SlideChoiceBar_barHeight, resources.getDimensionPixelSize(R.dimen.scb_barHeight));
-            mSlideIndicatorSize = a.getDimensionPixelSize(R.styleable.SlideChoiceBar_indicatorSize, resources.getDimensionPixelSize(R.dimen.scb_indicatorSize));
+            mSlideBarHeight = a.getDimensionPixelSize(R.styleable.SlideChoiceBar_scb_barHeight, resources.getDimensionPixelSize(R.dimen.scb_barHeight));
+            mSlideIndicatorSize = a.getDimensionPixelSize(R.styleable.SlideChoiceBar_scb_indicatorSize, resources.getDimensionPixelSize(R.dimen.scb_indicatorSize));
 
-            mSlideBarBackground = a.getDrawable(R.styleable.SlideChoiceBar_barBackground);
+            mSlideBarBackground = a.getDrawable(R.styleable.SlideChoiceBar_scb_barBackground);
             if (mSlideBarBackground == null) {
-                mSlideBarBackground = resources.getDrawable(R.drawable.scb_bar_background, theme);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mSlideBarBackground = resources.getDrawable(R.drawable.scb_bar_background, theme);
+                } else {
+                    mSlideBarBackground = resources.getDrawable(R.drawable.scb_bar_background);
+                }
             }
 
-            mSlideBarIndicator = a.getDrawable(R.styleable.SlideChoiceBar_indicator);
+            mSlideBarIndicator = a.getDrawable(R.styleable.SlideChoiceBar_scb_indicator);
             if (mSlideBarIndicator == null) {
-                mSlideBarIndicator = resources.getDrawable(R.drawable.scb_bar_indicator, theme);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mSlideBarIndicator = resources.getDrawable(R.drawable.scb_bar_indicator, theme);
+                } else {
+                    mSlideBarIndicator = resources.getDrawable(R.drawable.scb_bar_indicator);
+                }
             }
 
-            int entryValueArrayResId = a.getResourceId(R.styleable.SlideChoiceBar_entries, 0);
+            int entryValueArrayResId = a.getResourceId(R.styleable.SlideChoiceBar_scb_entries, 0);
             if (entryValueArrayResId > 0) {
                 String[] stringArray = resources.getStringArray(entryValueArrayResId);
                 if (stringArray.length > 0) {

@@ -9,6 +9,6 @@
     <com.dogold.andemos.widgets.customwidgets.SlideChoiceBar
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        app:entries="@array/scb_entrys"/>
+        app:scb_entries="@array/scb_entrys"/>
 
 </LinearLayout>
