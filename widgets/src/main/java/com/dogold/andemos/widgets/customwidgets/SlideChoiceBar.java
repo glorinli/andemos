@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -47,9 +48,14 @@ public class SlideChoiceBar extends View {
 
     private GestureDetector mGestureDetector;
 
-    private int mCurrentSelectedIndex;
+    private int mCurrentSelectedIndex = -1;
 
     private Scroller mScroller;
+    private boolean mAutoScrolling;
+
+    private boolean mChooseAutomatically;   // Current choosen change is caused by function call, not user interaction
+
+    private OnItemChoosenListener mOnItemChoosenListener;
 
     public SlideChoiceBar(Context context) {
         super(context);
@@ -137,9 +143,12 @@ public class SlideChoiceBar extends View {
                 if (y >= mIndicatorBound.top && y <= mIndicatorBound.bottom && x >= mIndicatorLeftMax - halfIndicatorSize && x <= mIndicatorRightMax + halfIndicatorSize) {
                     mDragging = true;
                     moveIndicator(EvaluateUtils.between(mIndicatorLeftMax, mIndicatorRightMax, x));
+                    mChooseAutomatically = false;
                 } else {
                     mDragging = false;
                 }
+
+                Log.d(TAG, "onDown, dragging: " + mDragging);
 
                 return true;
             }
@@ -154,17 +163,47 @@ public class SlideChoiceBar extends View {
                     float x = e2.getX();
                     if (x >= mIndicatorLeftMax && x <= mIndicatorRightMax) {
                         moveIndicator(x);
+                        mChooseAutomatically = false;
+                        return true;
                     }
                 }
 
                 return super.onScroll(e1, e2, distanceX, distanceY);
             }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                float y = e.getY();
+                float x = e.getX();
+                for (int i = 0; i < mEntries.size(); i++) {
+                    Entry entry = mEntries.get(i);
+                    if (entry.bound.contains(x, y)) {
+                        // Move to index
+                        if (i != mCurrentSelectedIndex) {
+                            scrollToIndex(i);
+                            mChooseAutomatically = false;
+
+                            return true;
+                        }
+                    }
+                }
+                return super.onSingleTapUp(e);
+            }
         });
+    }
+
+    private void scrollToIndex(int i) {
+        int targetX = mIndicatorLeftMax + mEntryGap * i;
+        int dx = targetX - mIndicatorOffset;
+        mScroller.startScroll(mIndicatorOffset, 0, dx, 0);
+        mAutoScrolling = true;
+
+        postInvalidate();
     }
 
     private void moveIndicator(float x) {
         mIndicatorBound.offsetTo(Math.round(x - mIndicatorBound.width() / 2), mIndicatorBound.top);
-        mIndicatorOffset = mIndicatorBound.centerX() - mIndicatorLeftMax;
+        mIndicatorOffset = Math.round(x);
         mSlideBarIndicator.setBounds(mIndicatorBound);
 
         updateEntryScale();
@@ -197,14 +236,33 @@ public class SlideChoiceBar extends View {
             int targetIndex = Math.round((float) mIndicatorOffset / mEntryGap);
             int targetX = mIndicatorLeftMax + mEntryGap * targetIndex;
 
-            Log.d(TAG, "onUp, target: " + targetIndex);
+            mChooseAutomatically = false;
 
-            mScroller.startScroll(mIndicatorOffset, 0, targetX - mIndicatorOffset, 0);
+            int dx = targetX - mIndicatorOffset;
+            Log.d(TAG, "onUp, target: " + targetIndex + ", dx: " + dx);
+            if (dx == 0) {
+                // Already on position
+                notifyItemChoosen(targetIndex);
+            } else {
+                mScroller.startScroll(mIndicatorOffset, 0, dx, 0);
+                mAutoScrolling = true;
 
-            postInvalidate();
+                postInvalidate();
+            }
         }
 
         return mGestureDetector.onTouchEvent(event);
+    }
+
+    private void notifyItemChoosen(int targetIndex) {
+        if (mCurrentSelectedIndex != targetIndex) {
+            mCurrentSelectedIndex = targetIndex;
+            Log.d(TAG, "notifyItemChoosen: " + mCurrentSelectedIndex + ", auto: " + mChooseAutomatically);
+
+            if (mOnItemChoosenListener != null) {
+                mOnItemChoosenListener.onChoosenItemChanged(mCurrentSelectedIndex, !mChooseAutomatically);
+            }
+        }
     }
 
     @Override
@@ -214,6 +272,17 @@ public class SlideChoiceBar extends View {
         if (mScroller.computeScrollOffset()) {
             moveIndicator(mScroller.getCurrX());
             postInvalidate();
+        } else {
+            if (mAutoScrolling) {
+                mAutoScrolling = false;
+                // Finish scroll, notify item choosen
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyItemChoosen(Math.round((float) mIndicatorOffset / mEntryGap));
+                    }
+                });
+            }
         }
     }
 
@@ -293,5 +362,20 @@ public class SlideChoiceBar extends View {
         float textHeight;
         float scale;
         int textColor;
+    }
+
+    public void setOnItemChoosenListener(@NonNull OnItemChoosenListener l) {
+        mOnItemChoosenListener = l;
+    }
+
+    public interface OnItemChoosenListener {
+        void onChoosenItemChanged(int index, boolean fromUser);
+    }
+
+    public void setChoosenItem(int index) {
+        if (index != mCurrentSelectedIndex) {
+            scrollToIndex(index);
+            mChooseAutomatically = true;
+        }
     }
 }
