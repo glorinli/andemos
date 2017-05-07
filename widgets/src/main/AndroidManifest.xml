@@ -20,6 +20,8 @@
         <activity android:name=".activities.SeekBarActivity"/>
 
         <activity android:name=".activities.SlideChoiceBarActivity" />
+
+        <activity android:name=".activities.HoleViewActivity" />
     </application>
 
 </manifest>
