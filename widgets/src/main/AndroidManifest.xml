@@ -16,12 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".activities.SeekBarActivity"/>
-
+        <activity android:name=".activities.SeekBarActivity" />
         <activity android:name=".activities.SlideChoiceBarActivity" />
-
         <activity android:name=".activities.HoleViewActivity" />
+        <activity android:name=".activities.PulseFrameLayoutActivity"></activity>
     </application>
 
 </manifest>

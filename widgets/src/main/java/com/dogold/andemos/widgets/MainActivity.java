@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.dogold.andemos.widgets.activities.HoleViewActivity;
+import com.dogold.andemos.widgets.activities.PulseFrameLayoutActivity;
 import com.dogold.andemos.widgets.activities.SlideChoiceBarActivity;
 import com.dogold.andemos.widgets.utils.ActivityUtils;
 import com.dogold.andemos.widgets.activities.SeekBarActivity;
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.btnSeekBar, R.id.btnSlideChoiceBar, R.id.btnHoleViews})
+    @OnClick({R.id.btnSeekBar, R.id.btnSlideChoiceBar, R.id.btnHoleViews, R.id.btnPulse})
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.btnSeekBar:
@@ -37,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.btnHoleViews:
                 ActivityUtils.startActivity(this, HoleViewActivity.class);
+                break;
+            case R.id.btnPulse:
+                ActivityUtils.startActivity(this, PulseFrameLayoutActivity.class);
                 break;
         }
     }
