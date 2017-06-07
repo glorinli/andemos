@@ -6,11 +6,11 @@ import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.AttrRes;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.animation.CycleInterpolator;
-import android.view.animation.Interpolator;
+import android.view.View;
 import android.widget.FrameLayout;
 
 /**
@@ -40,7 +40,7 @@ public class PulseAlphaFramelayout extends FrameLayout implements ValueAnimator.
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        if (!isPulsing()) {
+        if (getVisibility() == VISIBLE && !isPulsing()) {
             startPulse();
         }
     }
@@ -53,7 +53,24 @@ public class PulseAlphaFramelayout extends FrameLayout implements ValueAnimator.
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        stopPulse();
+        if (isPulsing()) {
+            stopPulse();
+        }
+    }
+
+    @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+
+        if (visibility == VISIBLE) {
+            if (!isPulsing()) {
+                startPulse();
+            }
+        } else {
+            if (isPulsing()) {
+                stopPulse();
+            }
+        }
     }
 
     private void startPulse() {
