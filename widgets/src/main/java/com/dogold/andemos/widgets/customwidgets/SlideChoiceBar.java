@@ -19,7 +19,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Scroller;
 
-import com.dogold.andemos.widgets.BuildConfig;
 import com.dogold.andemos.widgets.R;
 import com.dogold.andemos.widgets.utils.EvaluateUtils;
 

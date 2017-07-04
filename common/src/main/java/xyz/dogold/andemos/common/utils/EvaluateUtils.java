@@ -1,4 +1,4 @@
-package com.dogold.andemos.widgets.utils;
+package xyz.dogold.andemos.common.utils;
 
 /**
  * SizeUtils
