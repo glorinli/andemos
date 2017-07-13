@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.HorizontalScrollView;
 
 /**
@@ -21,9 +22,11 @@ public class GyroHorizontalScrollView extends HorizontalScrollView implements Se
     private static final String TAG = "GyroHSV";
     private SensorManager mSensorManager;
     private boolean mListeningGyro;
-    private float mScrollPercentPerDegree = 100 / 30f;
+    private float mScrollPercentPerDegree = 100 / 60f;
     private int mScrollPixelsPerDegree;
-    private long mLastSensorEventTime;
+
+    private float mScrollSpeed; // Pixels / Second
+    private long mLastScrollTime;
 
     public GyroHorizontalScrollView(Context context) {
         this(context, null);
@@ -39,6 +42,24 @@ public class GyroHorizontalScrollView extends HorizontalScrollView implements Se
         if (isInEditMode()) return;
 
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                scrollToCenter();
+
+
+                getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+    }
+
+    public void scrollToCenter() {
+        // Scroll to center
+        View child = getChildAt(0);
+        if (child != null) {
+            scrollTo(child.getWidth() / 2, 0);
+        }
     }
 
     @Override
@@ -104,28 +125,32 @@ public class GyroHorizontalScrollView extends HorizontalScrollView implements Se
 
 //            Log.d(TAG, String.format("Gyro data:\nX: %1$f\nY: %2$f\nZ: %3$f", angleSpeedX, angleSpeedY, angleSpeedZ));
 
-            long currentTime = SystemClock.uptimeMillis();
-
-            if (mLastSensorEventTime != 0) {
-                long duration = currentTime - mLastSensorEventTime;
-
-                float angles = angleSpeedY * duration / 1000;
-
-                Log.d(TAG, "Rotate angles: " + angles);
-
-                int scrollOffset = (int) (mScrollPixelsPerDegree * angles);
-
-                if (Math.abs(angles) > 0.3f) {
-                    smoothScrollBy(scrollOffset, 0);
-                }
-            }
-
-            mLastSensorEventTime = currentTime;
+            mScrollSpeed = angleSpeedY * mScrollPixelsPerDegree;
+            postInvalidate();
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
+        // noops
+    }
 
+    @Override
+    public void computeScroll() {
+        super.computeScroll();
+
+//        Log.d(TAG, "computeScroll, speed: " + mScrollSpeed);
+
+        long currentTime = SystemClock.uptimeMillis();
+
+        if (mLastScrollTime > 0 && Math.abs(mScrollSpeed) > 10) {
+            long duration = currentTime - mLastScrollTime;
+            int scrollOffset = (int) (mScrollSpeed * duration / 1000);
+
+            scrollBy(scrollOffset, 0);
+            invalidate();
+        }
+
+        mLastScrollTime = currentTime;
     }
 }

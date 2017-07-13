@@ -17,7 +17,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".gyro.GyroActivity">
+        <activity android:name=".gyro.GyroActivity"
+                  android:screenOrientation="portrait">
         </activity>
     </application>
 
