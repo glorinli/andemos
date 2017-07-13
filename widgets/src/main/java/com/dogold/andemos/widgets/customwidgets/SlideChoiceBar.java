@@ -20,10 +20,11 @@ import android.view.View;
 import android.widget.Scroller;
 
 import com.dogold.andemos.widgets.R;
-import com.dogold.andemos.widgets.utils.EvaluateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import xyz.dogold.andemos.common.utils.EvaluateUtils;
 
 /**
  * SlideChoiceBar

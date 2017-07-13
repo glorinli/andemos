@@ -13,4 +13,20 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"/>
 
+    <xyz.dogold.andemos.sensors.gyro.GyroHorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="320dp">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="1000dp"
+                android:layout_height="320dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/panorama"/>
+        </FrameLayout>
+    </xyz.dogold.andemos.sensors.gyro.GyroHorizontalScrollView>
+
 </LinearLayout>
