@@ -11,45 +11,78 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.HorizontalScrollView;
+import android.widget.FrameLayout;
 
 /**
  * GyroHorizontalScrollView
  * Created by glorin on 13/07/2017.
  */
 
-public class GyroHorizontalScrollView extends HorizontalScrollView implements SensorEventListener {
-    private static final String TAG = "GyroHSV";
+public class GyroScrollView extends FrameLayout implements SensorEventListener {
+    private static final String TAG = "GyroScrollView";
     private SensorManager mSensorManager;
     private boolean mListeningGyro;
     private float mScrollPercentPerDegree = 100 / 60f;
-    private int mScrollPixelsPerDegree;
+    private int mScrollPixelsPerDegreeHorizontal, mScrollPixelPerDegreeVertical;
 
-    private float mScrollSpeed; // Pixels / Second
+    private float mScrollSpeedHorizontal, mScrollSpeedVertical; // Pixels / Second
     private long mLastScrollTime;
 
-    public GyroHorizontalScrollView(Context context) {
+    private boolean mHasScrollToCenterWhenInit;
+    private int mMaxScrollX, mMaxScrollY;
+    private boolean mCanScrollHorizontal, mCanScrollVertical;
+
+    public GyroScrollView(Context context) {
         this(context, null);
     }
 
-    public GyroHorizontalScrollView(Context context, AttributeSet attrs) {
+    public GyroScrollView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public GyroHorizontalScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public GyroScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         if (isInEditMode()) return;
 
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+    }
 
-        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+
+        final View childAt = getChildAt(0);
+
+        if (childAt == null) {
+            Log.e(TAG, "No children found");
+            return;
+        }
+
+        childAt.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                scrollToCenter();
+                int childWidth = childAt.getWidth();
+                int childHeight = childAt.getHeight();
 
+                mCanScrollHorizontal = childWidth > getWidth();
+                mCanScrollVertical = childHeight > getHeight();
 
-                getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                mMaxScrollX = childWidth - getWidth();
+                mMaxScrollY = childHeight - getHeight();
+
+                if (childWidth > 0) {
+                    mScrollPixelsPerDegreeHorizontal = (int) (mScrollPercentPerDegree * childWidth / 100);
+                }
+
+                if (childHeight > 0) {
+                    mScrollPixelPerDegreeVertical = (int) (mScrollPercentPerDegree * childHeight / 100);
+                }
+
+                if (!mHasScrollToCenterWhenInit) {
+                    scrollToCenter();
+                    mHasScrollToCenterWhenInit = true;
+                }
             }
         });
     }
@@ -115,10 +148,6 @@ public class GyroHorizontalScrollView extends HorizontalScrollView implements Se
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-
-        if (w > 0) {
-            mScrollPixelsPerDegree = (int) (mScrollPercentPerDegree * w / 100);
-        }
     }
 
     @Override
@@ -130,7 +159,8 @@ public class GyroHorizontalScrollView extends HorizontalScrollView implements Se
 
 //            Log.d(TAG, String.format("Gyro data:\nX: %1$f\nY: %2$f\nZ: %3$f", angleSpeedX, angleSpeedY, angleSpeedZ));
 
-            mScrollSpeed = angleSpeedY * mScrollPixelsPerDegree;
+            mScrollSpeedHorizontal = angleSpeedY * mScrollPixelsPerDegreeHorizontal;
+            mScrollSpeedVertical = angleSpeedX * mScrollPixelPerDegreeVertical;
             postInvalidate();
         }
     }
@@ -144,18 +174,34 @@ public class GyroHorizontalScrollView extends HorizontalScrollView implements Se
     public void computeScroll() {
         super.computeScroll();
 
-//        Log.d(TAG, "computeScroll, speed: " + mScrollSpeed);
+//        Log.d(TAG, "computeScroll, speed: " + mScrollSpeedHorizontal + ", " + mScrollSpeedVertical);
 
         long currentTime = SystemClock.uptimeMillis();
 
-        if (mLastScrollTime > 0 && Math.abs(mScrollSpeed) > 10) {
+        if (mLastScrollTime > 0) {
             long duration = currentTime - mLastScrollTime;
-            int scrollOffset = (int) (mScrollSpeed * duration / 1000);
 
-            scrollBy(scrollOffset, 0);
-            invalidate();
+            boolean shouldInvalidate = false;
+
+            if (mCanScrollHorizontal && Math.abs(mScrollSpeedHorizontal) > 10) {
+                safeScrollBy(-(int) (mScrollSpeedHorizontal * duration / 1000), 0);
+                shouldInvalidate = true;
+            }
+
+            if (mCanScrollVertical && Math.abs(mScrollSpeedVertical) > 10) {
+                safeScrollBy(0, -(int) (mScrollSpeedVertical * duration / 1000));
+                shouldInvalidate = true;
+            }
+
+            if (shouldInvalidate) {
+                invalidate();
+            }
         }
 
         mLastScrollTime = currentTime;
+    }
+
+    private void safeScrollBy(int dx, int dy) {
+        scrollTo(Math.max(0, Math.min(mMaxScrollX, getScrollX() + dx)), Math.max(0, Math.min(mMaxScrollY, getScrollY() + dy)));
     }
 }
