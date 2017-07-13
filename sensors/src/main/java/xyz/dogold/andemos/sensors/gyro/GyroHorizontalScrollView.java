@@ -98,6 +98,11 @@ public class GyroHorizontalScrollView extends HorizontalScrollView implements Se
     }
 
     private void startListenGyro() {
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) == null) {
+            Log.e(TAG, "Gyro sensor not supported!!!");
+            return;
+        }
+
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL);
         mListeningGyro = true;
     }
