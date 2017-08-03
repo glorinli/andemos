@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleProgressBar">
+        <attr name="cpb_strokeWidth" format="dimension|reference" />
+        <attr name="cpb_strokeColor" format="color|reference" />
+        <attr name="cpb_circleBackgroundColor" format="color|reference" />
+    </declare-styleable>
+</resources>
