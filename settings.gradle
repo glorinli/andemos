@@ -1,1 +1,1 @@
-include ':touchevents', ':widgets', ':network', ':sensors', ':common'
+include ':touchevents', ':widgets', ':network', ':sensors', ':common', ':system'
