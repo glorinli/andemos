@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="xyz.dogold.andemos.sharing.MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Select a platform"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbAllPlatform"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="All"/>
+
+        <RadioButton
+            android:id="@+id/rbFacebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Facebook"/>
+
+        <RadioButton
+            android:id="@+id/rbInstagram"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Instagram"/>
+
+        <RadioButton
+            android:id="@+id/rbTwitter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Twitter"/>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnShareText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Share a text"/>
+
+    <Button
+        android:id="@+id/btnShareLink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Share a link"/>
+
+    <Button
+        android:id="@+id/btnShareImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Share an image"/>
+
+    <Button
+        android:id="@+id/btnShareImageExplicit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Share an image Explicit"/>
+
+    <Button
+        android:id="@+id/btnShareVideo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Share a video"/>
+
+    <Button
+        android:id="@+id/btnShareVideoExplicit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Share a video Explicit"/>
+
+
+</LinearLayout>
