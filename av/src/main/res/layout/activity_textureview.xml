@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/flTextureViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:background="@android:color/black">
+
+        <TextureView
+            android:id="@+id/ttvTextureView"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"/>
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/btnGetBitmap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Get TextureView Bitmap"/>
+
+    <Button
+        android:id="@+id/btnDoubleBufferSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Double Buffer Size"/>
+
+    <Button
+        android:id="@+id/btnDoubleViewSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Double TextureView Size"/>
+
+    <Button
+        android:id="@+id/btnSetMatrix"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Set matrix to fit size"/>
+
+</LinearLayout>
