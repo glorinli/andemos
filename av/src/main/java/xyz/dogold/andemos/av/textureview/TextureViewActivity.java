@@ -1,5 +1,7 @@
 package xyz.dogold.andemos.av.textureview;
 
+import android.Manifest;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -7,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,17 +18,26 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
 import xyz.dogold.andemos.av.R;
+import xyz.dogold.andemos.common.utils.FileUtils;
 
 /**
  * TextureViewActivity
  * Created by glorin on 27/11/2017.
  */
 
+@RuntimePermissions
 public class TextureViewActivity extends AppCompatActivity {
     private static final String TAG = "TextureViewActivity";
 
@@ -43,6 +55,8 @@ public class TextureViewActivity extends AppCompatActivity {
     private Rect mBitmapRect;
 
     private Rect mSurfaceRect;
+
+    private static final String BITMAP_SAVE_PATH = FileUtils.APP_EXTERNAL_STORAGE_DIR + File.separator + "av/textureview_bitmap.jpg";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,15 +113,11 @@ public class TextureViewActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.btnGetBitmap, R.id.btnDoubleBufferSize, R.id.btnDoubleViewSize,
-            R.id.btnSetMatrix})
+            R.id.btnSetMatrix, R.id.btnViewBitmap})
     void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.btnGetBitmap:
-                final Bitmap bitmap = ttvTextureView.getBitmap();
-
-                if (bitmap != null && !bitmap.isRecycled()) {
-                    Toast.makeText(this, "Get bitmap, size is: " + bitmap.getWidth() + ", " + bitmap.getHeight(), Toast.LENGTH_SHORT).show();
-                }
+                TextureViewActivityPermissionsDispatcher.getAndSaveTextureViewBitmapWithPermissionCheck(this);
                 break;
             case R.id.btnDoubleBufferSize:
                 ttvTextureView.getSurfaceTexture().setDefaultBufferSize(ttvTextureView.getWidth() * 2, ttvTextureView.getHeight() * 2);
@@ -131,6 +141,40 @@ public class TextureViewActivity extends AppCompatActivity {
 
                 drawTextureView();
                 break;
+            case R.id.btnViewBitmap:
+                break;
+        }
+    }
+
+    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void getAndSaveTextureViewBitmap() {
+        final Bitmap bitmap = ttvTextureView.getBitmap();
+
+        if (bitmap != null && !bitmap.isRecycled()) {
+            OutputStream os = null;
+            try {
+                File f = new File(BITMAP_SAVE_PATH);
+
+                final File parentFile = f.getParentFile();
+                if (parentFile != null) {
+                    parentFile.mkdirs();
+                }
+
+                os = new FileOutputStream(f);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                Toast.makeText(this, "Get bitmap, size is: " + bitmap.getWidth() + ", " + bitmap.getHeight(), Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(this, "Error save bitmap: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            } finally {
+                if (os != null) {
+                    try {
+                        os.flush();
+                        os.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
     }
 
@@ -142,7 +186,7 @@ public class TextureViewActivity extends AppCompatActivity {
         canvas.drawColor(Color.BLACK);
 
         if (mSurfaceBitmap == null) {
-            mSurfaceBitmap = BitmapFactory.decodeResource(getResources(), R.raw.avatar);
+            mSurfaceBitmap = BitmapFactory.decodeResource(getResources(), R.raw.starry);
         }
 
 

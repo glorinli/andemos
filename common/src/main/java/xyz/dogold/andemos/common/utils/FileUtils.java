@@ -1,5 +1,7 @@
 package xyz.dogold.andemos.common.utils;
 
+import android.os.Environment;
+
 import java.io.File;
 
 import static android.text.TextUtils.isEmpty;
@@ -10,6 +12,8 @@ import static android.text.TextUtils.isEmpty;
  */
 
 public class FileUtils {
+    public static String APP_EXTERNAL_STORAGE_DIR = Environment.getExternalStorageDirectory() + File.separator + "Andemos";
+
     public static boolean isFileExists(String path) {
         if (isEmpty(path)) {
             return false;
