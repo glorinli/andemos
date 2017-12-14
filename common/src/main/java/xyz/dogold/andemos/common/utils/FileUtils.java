@@ -1,6 +1,10 @@
 package xyz.dogold.andemos.common.utils;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 
 import java.io.File;
 
@@ -24,5 +28,20 @@ public class FileUtils {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor;
+        String[] proj = {MediaStore.MediaColumns.DATA};
+        cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+            cursor.moveToFirst();
+            String path = cursor.getString(column_index);
+            cursor.close();
+            return path;
+        } else {
+            return null;
+        }
     }
 }

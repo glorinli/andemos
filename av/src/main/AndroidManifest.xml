@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".textureview.TextureViewActivity"/>
+        <activity android:name=".videoextract.VideoExtractActivity"/>
     </application>
 
 </manifest>

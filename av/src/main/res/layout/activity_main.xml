@@ -5,13 +5,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="xyz.dogold.andemos.av.MainActivity">
+    tools:context="xyz.dogold.andemos.av.MainActivity"
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/btnTextureView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextureView Demo"
+        />
+
+    <Button
+        android:id="@+id/btnVideoExtract"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Video extract Demo"
         />
 
 </LinearLayout>

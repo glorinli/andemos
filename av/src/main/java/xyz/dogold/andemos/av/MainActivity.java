@@ -9,6 +9,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import xyz.dogold.andemos.av.textureview.TextureViewActivity;
+import xyz.dogold.andemos.av.videoextract.VideoExtractActivity;
 
 public class MainActivity extends AppCompatActivity {
     private Unbinder mUnbinder;
@@ -28,11 +29,14 @@ public class MainActivity extends AppCompatActivity {
         mUnbinder.unbind();
     }
 
-    @OnClick({R.id.btnTextureView})
+    @OnClick({R.id.btnTextureView, R.id.btnVideoExtract})
     void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.btnTextureView:
                 startActivity(new Intent(this, TextureViewActivity.class));
+                break;
+            case R.id.btnVideoExtract:
+                startActivity(new Intent(this, VideoExtractActivity.class));
                 break;
         }
     }

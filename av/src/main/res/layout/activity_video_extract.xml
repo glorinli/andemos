@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvVideoPath"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No file"/>
+
+    <Button
+        android:id="@+id/btnSelectVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select video"/>
+
+    <Button
+        android:id="@+id/btnExtract"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Extract video infos"/>
+
+    <TextView
+        android:id="@+id/tvVideoInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""/>
+
+</LinearLayout>
