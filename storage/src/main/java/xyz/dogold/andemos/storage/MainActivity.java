@@ -1,20 +1,36 @@
 package xyz.dogold.andemos.storage;
 
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import xyz.dogold.andemos.common.utils.ActivityUtils;
+
 public class MainActivity extends AppCompatActivity {
+    private Unbinder mUnbinder;
+
+    @BindView(R.id.tvStorageInfo)
+    TextView tvStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView tvStorage = findViewById(R.id.tvStorageInfo);
+        mUnbinder = ButterKnife.bind(this);
 
+        showStorageInfos();
+    }
+
+    private void showStorageInfos() {
         StringBuilder sb = new StringBuilder("Storage info:\n\n");
 
         sb.append("getFilesDir: ").append(getFilesDir()).append("\n\n");
@@ -33,5 +49,23 @@ public class MainActivity extends AppCompatActivity {
                 "/Android/data/" + getPackageName() + "/files").append("\n\n");
 
         tvStorage.setText(sb);
+    }
+
+    @OnClick({R.id.btnSDCardActivity})
+    void onViewClicked(View v) {
+        switch (v.getId()) {
+            case R.id.btnSDCardActivity:
+                ActivityUtils.startActivity(this, SDCardActivity.class);
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mUnbinder != null) {
+            mUnbinder.unbind();
+        }
     }
 }
