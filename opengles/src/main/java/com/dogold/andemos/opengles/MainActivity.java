@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.dogold.andemos.opengles.egl.SurfaceViewActivity;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
@@ -13,6 +15,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         findViewById(R.id.btnGlSurfaceView).setOnClickListener(this);
+        findViewById(R.id.btnSurfaceView).setOnClickListener(this);
     }
 
     @Override
@@ -20,6 +23,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.btnGlSurfaceView:
                 startActivity(new Intent(this, GLSurfaceViewActivity.class));
+                break;
+            case R.id.btnSurfaceView:
+                startActivity(new Intent(this, SurfaceViewActivity.class));
         }
     }
 }

@@ -22,4 +22,10 @@
         android:layout_height="wrap_content"
         android:text="GLSurfaceView Demo"/>
 
+    <Button
+        android:id="@+id/btnSurfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SurfaceView Demo"/>
+
 </LinearLayout>
