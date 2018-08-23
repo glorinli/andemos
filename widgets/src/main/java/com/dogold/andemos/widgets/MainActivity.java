@@ -8,6 +8,7 @@ import android.widget.Button;
 import com.dogold.andemos.widgets.activities.HoleViewActivity;
 import com.dogold.andemos.widgets.activities.ProgressBarActivity;
 import com.dogold.andemos.widgets.activities.PulseFrameLayoutActivity;
+import com.dogold.andemos.widgets.activities.ScrollingActivity;
 import com.dogold.andemos.widgets.activities.SlideChoiceBarActivity;
 import com.dogold.andemos.widgets.activities.SeekBarActivity;
 
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
         mUnbinder.unbind();
     }
 
-    @OnClick({R.id.btnSeekBar, R.id.btnSlideChoiceBar, R.id.btnHoleViews, R.id.btnPulse, R.id.btnProgressBar})
+    @OnClick({R.id.btnSeekBar, R.id.btnSlideChoiceBar, R.id.btnHoleViews, R.id.btnPulse, R.id.btnProgressBar,
+            R.id.btnScrolling})
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.btnSeekBar:
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btnProgressBar:
                 ActivityUtils.startActivity(this, ProgressBarActivity.class);
                 break;
+            case R.id.btnScrolling:
+                ActivityUtils.startActivity(this, ScrollingActivity.class);
         }
     }
 }
