@@ -2,8 +2,10 @@ package com.dogold.andemos.network;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Button;
 
+import com.dogold.andemos.network.util.NetworkManager;
 import com.dogold.andemos.network.util.NetworkManagerImpl;
 import com.dogold.andemos.network.util.NetworkUtil;
 
@@ -13,11 +15,14 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import xyz.dogold.andemos.common.utils.ToastUtil;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NetworkManager.NetworkStateListener {
+    private static final String TAG = "MainActivity";
 
     @BindView(R.id.btnCheckVpn)
     Button btnCheckVpn;
     private Unbinder mUnbinder;
+
+    private NetworkManager mNetworkManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +30,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mUnbinder = ButterKnife.bind(this);
 
-        new NetworkManagerImpl(this);
+        mNetworkManager = new NetworkManagerImpl(this);
+
+        mNetworkManager.addNetworkListener(this);
     }
 
     @OnClick(R.id.btnCheckVpn)
@@ -38,5 +45,12 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
 
         mUnbinder.unbind();
+
+        mNetworkManager.removeNetworkListener(this);
+    }
+
+    @Override
+    public void onNetworkStateChanged(boolean wifi, boolean mobile, int type) {
+        Log.d(TAG, "onNetworkStateChanged, vpn: " + NetworkUtil.isVpnActivated());
     }
 }
