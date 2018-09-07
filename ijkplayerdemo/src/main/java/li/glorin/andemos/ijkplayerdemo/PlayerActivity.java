@@ -1,17 +1,25 @@
 package li.glorin.andemos.ijkplayerdemo;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.SurfaceTexture;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
 import android.widget.Button;
+
+import java.io.IOException;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
-public class PlayerActivity extends AppCompatActivity implements TextureView.SurfaceTextureListener {
+public class PlayerActivity extends AppCompatActivity implements TextureView.SurfaceTextureListener, View.OnClickListener {
     private static final String TAG = "PlayerActivity";
 
     private IjkMediaPlayer mIjkMediaPlayer;
@@ -25,12 +33,32 @@ public class PlayerActivity extends AppCompatActivity implements TextureView.Sur
     private TextureView mTextureView;
     private Button btnPlay;
 
+    public static void start(@NonNull Context starter, @NonNull Uri uri) {
+        Intent intent = new Intent(starter, PlayerActivity.class);
+        intent.setData(uri);
+
+        if (!(starter instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+
+        starter.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final Uri uri = getIntent().getData();
+
+        if (uri == null) {
+            throw new IllegalArgumentException("Should provide uri");
+        }
+
         setContentView(R.layout.activity_player);
 
         btnPlay = findViewById(R.id.btnPlay);
+
+        btnPlay.setOnClickListener(this);
 
         mTextureView = findViewById(R.id.textureView);
 
@@ -45,6 +73,13 @@ public class PlayerActivity extends AppCompatActivity implements TextureView.Sur
         mIjkMediaPlayer.setOnSeekCompleteListener(mIjkListener);
         mIjkMediaPlayer.setOnBufferingUpdateListener(mIjkListener);
         mIjkMediaPlayer.setOnErrorListener(mIjkListener);
+
+        try {
+            mIjkMediaPlayer.setDataSource(this, uri);
+        } catch (IOException e) {
+            Log.e(TAG, "Error set data source", e);
+            finish();
+        }
     }
 
     @Override
@@ -56,7 +91,10 @@ public class PlayerActivity extends AppCompatActivity implements TextureView.Sur
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        Log.d(TAG, "setSurface");
         mIjkMediaPlayer.setSurface(new Surface(surface));
+
+        mIjkMediaPlayer.prepareAsync();
     }
 
     @Override
@@ -72,5 +110,22 @@ public class PlayerActivity extends AppCompatActivity implements TextureView.Sur
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
         // Noops
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.btnPlay) {
+            togglePlay();
+        }
+    }
+
+    private void togglePlay() {
+        if (mIjkMediaPlayer.isPlaying()) {
+            mIjkMediaPlayer.pause();
+        } else {
+            if (mIjkMediaPlayer.isPlayable()) {
+                mIjkMediaPlayer.start();
+            }
+        }
     }
 }

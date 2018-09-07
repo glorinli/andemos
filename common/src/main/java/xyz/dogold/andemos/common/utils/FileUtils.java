@@ -1,12 +1,15 @@
 package xyz.dogold.andemos.common.utils;
 
+import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -43,5 +46,26 @@ public class FileUtils {
         } else {
             return null;
         }
+    }
+
+    public static ArrayList<String> getSelectedMediaPaths(Context context, Intent data) {
+
+        ArrayList<String> result = new ArrayList<>();
+
+        ClipData clipData = data.getClipData();
+        if (clipData != null) {
+            for (int i = 0; i < clipData.getItemCount(); i++) {
+                ClipData.Item videoItem = clipData.getItemAt(i);
+                Uri videoURI = videoItem.getUri();
+                String filePath = getRealPathFromURI(context, videoURI);
+                result.add(filePath);
+            }
+        } else {
+            Uri videoURI = data.getData();
+            String filePath = getRealPathFromURI(context, videoURI);
+            result.add(filePath);
+        }
+
+        return result;
     }
 }

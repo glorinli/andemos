@@ -36,4 +36,11 @@ dependencies {
 
     implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
     implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
+
+    implementation project(':common')
+
+    implementation("com.github.hotchemi:permissionsdispatcher:3.1.0") {
+        exclude module: "support-v13"
+    }
+    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:3.1.0"
 }
