@@ -20,4 +20,44 @@
         android:layout_marginTop="10dp"
         android:text="Play" />
 
+    <RadioGroup
+        android:id="@+id/rgSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@id/btnPlay"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbtn1_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1/4x" />
+
+        <RadioButton
+            android:id="@+id/rbtn1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1x" />
+
+        <RadioButton
+            android:id="@+id/rbtn2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2x" />
+
+        <RadioButton
+            android:id="@+id/rbtn4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4x" />
+
+        <RadioButton
+            android:id="@+id/rbtn8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8x" />
+    </RadioGroup>
+
 </RelativeLayout>

@@ -13,13 +13,14 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioGroup;
 
 import java.io.IOException;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
-public class PlayerActivity extends AppCompatActivity implements TextureView.SurfaceTextureListener, View.OnClickListener {
+public class PlayerActivity extends AppCompatActivity implements TextureView.SurfaceTextureListener, View.OnClickListener, RadioGroup.OnCheckedChangeListener {
     private static final String TAG = "PlayerActivity";
 
     private IjkMediaPlayer mIjkMediaPlayer;
@@ -64,6 +65,8 @@ public class PlayerActivity extends AppCompatActivity implements TextureView.Sur
 
         mTextureView.setSurfaceTextureListener(this);
 
+        RadioGroup rgSpeed = findViewById(R.id.rgSpeed);
+        rgSpeed.setOnCheckedChangeListener(this);
 
         // Create player
         mIjkMediaPlayer = new IjkMediaPlayer();
@@ -126,6 +129,36 @@ public class PlayerActivity extends AppCompatActivity implements TextureView.Sur
             if (mIjkMediaPlayer.isPlayable()) {
                 mIjkMediaPlayer.start();
             }
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        if (group.getId() == R.id.rgSpeed) {
+            setPlaybackSpeed(getCheckedSpeed(checkedId));
+        }
+    }
+
+    private void setPlaybackSpeed(float speed) {
+        if (mIjkMediaPlayer != null) {
+            mIjkMediaPlayer.setSpeed(speed);
+        }
+    }
+
+    private float getCheckedSpeed(int checkedId) {
+        switch (checkedId) {
+            case R.id.rbtn1_4:
+                return 1f / 4;
+            case R.id.rbtn1:
+                return 1f;
+            case R.id.rbtn2:
+                return 2f;
+            case R.id.rbtn4:
+                return 4f;
+            case R.id.rbtn8:
+                return 8f;
+            default:
+                return 1f;
         }
     }
 }
