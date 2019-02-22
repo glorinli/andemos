@@ -11,6 +11,7 @@ public class App extends Application {
 
         // Init ARouter
         if (BuildConfig.DEBUG) {
+            // Should set log and debug before init
             ARouter.openLog();
             ARouter.openDebug();
         }

@@ -17,7 +17,9 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.buttonTest:
-                ARouter.getInstance().build("/test/activity").navigation();
+                ARouter.getInstance().build("/test/activity")
+                        .withString("date", "Today")
+                        .navigation();
                 break;
         }
     }
