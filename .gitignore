@@ -5,6 +5,7 @@
 /.idea/libraries
 .DS_Store
 /build
+build/
 /captures
 .idea/
 true/crashlytics-build.properties
