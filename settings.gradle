@@ -1,1 +1,1 @@
-include ':touchevents', ':widgets', ':network', ':sensors', ':common', ':system', ':sharing', ':av', ':storage', ':umengtest', ':ijkplayerdemo', ':arouterdemo', 'opengles'
+include ':touchevents', ':widgets', ':network', ':sensors', ':common', ':system', ':sharing', ':av', ':storage', ':umengtest', ':ijkplayerdemo', ':arouterdemo', ':pinnedrefreshrecyclerview', 'opengles'

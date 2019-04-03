@@ -1,8 +1,8 @@
 package li.glorin.arouterdemo.test;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;

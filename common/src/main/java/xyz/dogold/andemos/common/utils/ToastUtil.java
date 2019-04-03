@@ -1,7 +1,7 @@
 package xyz.dogold.andemos.common.utils;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 import android.widget.Toast;
 
 /**

@@ -2,9 +2,8 @@ package com.dogold.andemos.opengles;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
