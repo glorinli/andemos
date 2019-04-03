@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
+import android.view.View;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.glorin.pinnedrefreshrecyclerview.adapter.MyAdapter;
@@ -25,15 +28,29 @@ import java.util.List;
  * @author Glorin
  */
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
+
     private SmartRefreshLayout smartRefreshLayout;
     private RecyclerView recyclerView;
+    private View flPinnedTitleBar;
+
     private MyAdapter myAdapter;
     private final List<MultiItemEntity> dataList = new ArrayList<>();
+    private final List<MultiItemEntity> dataListExceptNews = new ArrayList<>();
+    private LinearLayoutManager linearLayoutManager;
+
+    private boolean isPinnedMode = false;
+    private int firstNewsPosition = -1;
+    private long checkPinnedAfterThisTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        flPinnedTitleBar = findViewById(R.id.flPinnedTitleBar);
+
+        initData();
 
         smartRefreshLayout = findViewById(R.id.smartRefreshLayout);
         smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -44,8 +61,29 @@ public class MainActivity extends AppCompatActivity {
         });
 
         recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, RecyclerView.VERTICAL));
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (linearLayoutManager == null || SystemClock.uptimeMillis() < checkPinnedAfterThisTime) {
+                    return;
+                }
+
+                int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+                if (firstVisibleItemPosition >= firstNewsPosition && !isPinnedMode) {
+                    // Enter pinned mode
+                    isPinnedMode = true;
+
+                    dataList.removeAll(dataListExceptNews);
+                    myAdapter.notifyItemRangeRemoved(0, dataListExceptNews.size());
+
+                    Log.i(TAG, "Enter pinned mode, firstVisibleItemPosition: " + firstVisibleItemPosition);
+                }
+            }
+        });
 
         myAdapter = new MyAdapter(dataList);
         myAdapter.bindToRecyclerView(recyclerView);
@@ -53,14 +91,23 @@ public class MainActivity extends AppCompatActivity {
         smartRefreshLayout.autoRefresh();
     }
 
+    private void initData() {
+        dataListExceptNews.add(new HeaderItemEntity());
+        dataListExceptNews.add(new DailyKnowedgeItemEntity());
+        dataListExceptNews.add(new HeaderItemEntity());
+        dataListExceptNews.add(new DailyKnowedgeItemEntity());
+        dataListExceptNews.add(new TitleBarItemEntity());
+    }
+
     private void loadData() {
         dataList.clear();
 
-        dataList.add(new HeaderItemEntity());
-        dataList.add(new DailyKnowedgeItemEntity());
-        dataList.add(new HeaderItemEntity());
-        dataList.add(new DailyKnowedgeItemEntity());
-        dataList.add(new TitleBarItemEntity());
+        if (!isPinnedMode) {
+            dataList.addAll(dataListExceptNews);
+            firstNewsPosition = dataListExceptNews.size();
+        } else {
+            firstNewsPosition = 0;
+        }
 
         dataList.add(new NewsItemEntity("富强"));
         dataList.add(new NewsItemEntity("民主"));
@@ -78,5 +125,25 @@ public class MainActivity extends AppCompatActivity {
         myAdapter.notifyDataSetChanged();
 
         smartRefreshLayout.finishRefresh();
+    }
+
+    public void onClick(View view) {
+        if (isPinnedMode) {
+            checkPinnedAfterThisTime = SystemClock.uptimeMillis() + 1000L;
+
+            dataList.addAll(0, dataListExceptNews);
+            firstNewsPosition = dataListExceptNews.size();
+
+            myAdapter.notifyItemRangeInserted(0, dataListExceptNews.size());
+
+            recyclerView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerView.smoothScrollToPosition(0);
+                }
+            }, 200L);
+
+            isPinnedMode = false;
+        }
     }
 }
