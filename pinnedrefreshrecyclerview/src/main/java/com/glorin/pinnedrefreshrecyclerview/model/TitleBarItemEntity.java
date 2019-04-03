@@ -1,4 +1,10 @@
 package com.glorin.pinnedrefreshrecyclerview.model;
 
-public class TitleBarItemEntity {
+import com.chad.library.adapter.base.entity.MultiItemEntity;
+
+public class TitleBarItemEntity implements MultiItemEntity {
+    @Override
+    public int getItemType() {
+        return Constants.TYPE_TITLE_BAR;
+    }
 }
