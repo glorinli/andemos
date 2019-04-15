@@ -19,6 +19,7 @@ import com.glorin.pinnedrefreshrecyclerview.model.NewsItemEntity;
 import com.glorin.pinnedrefreshrecyclerview.model.TitleBarItemEntity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.impl.ScrollBoundaryDeciderAdapter;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
@@ -65,6 +66,24 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, RecyclerView.VERTICAL));
 
+        smartRefreshLayout.setScrollBoundaryDecider(new ScrollBoundaryDeciderAdapter() {
+            @Override
+            public boolean canRefresh(View content) {
+                if (isPinnedMode) {
+                    int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+                    if (firstVisibleItemPosition < firstNewsPosition) {
+                        return true;
+                    } else if (firstVisibleItemPosition == firstNewsPosition) {
+                        if (linearLayoutManager.findViewByPosition(firstVisibleItemPosition).getTop() >= 0) {
+                            return true;
+                        }
+                    }
+                }
+
+                return super.canRefresh(content);
+            }
+        });
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -76,9 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 if (firstVisibleItemPosition >= firstNewsPosition && !isPinnedMode) {
                     // Enter pinned mode
                     isPinnedMode = true;
-
-                    dataList.removeAll(dataListExceptNews);
-                    myAdapter.notifyItemRangeRemoved(0, dataListExceptNews.size());
 
                     Log.i(TAG, "Enter pinned mode, firstVisibleItemPosition: " + firstVisibleItemPosition);
                 }
@@ -102,12 +118,8 @@ public class MainActivity extends AppCompatActivity {
     private void loadData() {
         dataList.clear();
 
-        if (!isPinnedMode) {
-            dataList.addAll(dataListExceptNews);
-            firstNewsPosition = dataListExceptNews.size();
-        } else {
-            firstNewsPosition = 0;
-        }
+        dataList.addAll(dataListExceptNews);
+        firstNewsPosition = dataListExceptNews.size();
 
         dataList.add(new NewsItemEntity("富强"));
         dataList.add(new NewsItemEntity("民主"));
@@ -130,11 +142,6 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View view) {
         if (isPinnedMode) {
             checkPinnedAfterThisTime = SystemClock.uptimeMillis() + 1000L;
-
-            dataList.addAll(0, dataListExceptNews);
-            firstNewsPosition = dataListExceptNews.size();
-
-            myAdapter.notifyItemRangeInserted(0, dataListExceptNews.size());
 
             recyclerView.postDelayed(new Runnable() {
                 @Override
