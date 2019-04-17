@@ -1,4 +1,4 @@
-package com.glorin.pinnedrefreshrecyclerview;
+package com.glorin.pinnedrefreshrecyclerview.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
+import com.glorin.pinnedrefreshrecyclerview.R;
 import com.glorin.pinnedrefreshrecyclerview.adapter.MyAdapter;
 import com.glorin.pinnedrefreshrecyclerview.model.DailyKnowedgeItemEntity;
 import com.glorin.pinnedrefreshrecyclerview.model.HeaderItemEntity;
@@ -27,8 +28,8 @@ import java.util.List;
 /**
  * @author Glorin
  */
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
+public class HideItemsPinnedRefreshActivity extends AppCompatActivity {
+    private static final String TAG = "HideItems";
 
     private SmartRefreshLayout smartRefreshLayout;
     private RecyclerView recyclerView;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_hide_item_approach);
 
         flPinnedTitleBar = findViewById(R.id.flPinnedTitleBar);
 
