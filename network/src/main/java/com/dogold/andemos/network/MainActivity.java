@@ -1,9 +1,12 @@
 package com.dogold.andemos.network;
 
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.dogold.andemos.network.util.NetworkManager;
 import com.dogold.andemos.network.util.NetworkManagerImpl;
@@ -20,6 +23,9 @@ public class MainActivity extends AppCompatActivity implements NetworkManager.Ne
 
     @BindView(R.id.btnCheckVpn)
     Button btnCheckVpn;
+    @BindView(R.id.tvIpAddress)
+    TextView tvIpAddress;
+
     private Unbinder mUnbinder;
 
     private NetworkManager mNetworkManager;
@@ -33,11 +39,22 @@ public class MainActivity extends AppCompatActivity implements NetworkManager.Ne
         mNetworkManager = new NetworkManagerImpl(this);
 
         mNetworkManager.addNetworkListener(this);
+
+        updateIpAddresses();
+    }
+
+    private void updateIpAddresses() {
+        tvIpAddress.setText("IpAddress:\n" + NetworkUtil.getIPAddresses());
     }
 
     @OnClick(R.id.btnCheckVpn)
     public void checkVpnClicked() {
         ToastUtil.showToast(this, "VPN activated: " + NetworkUtil.isVpnActivated());
+    }
+
+    @OnClick(R.id.refreshIpAddress)
+    public void refreshIpAddressesClicked() {
+        updateIpAddresses();
     }
 
     @Override
