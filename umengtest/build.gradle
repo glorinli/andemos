@@ -1,14 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-
-
+    compileSdkVersion COMPILE_SDK_VERSION
 
     defaultConfig {
         applicationId "xyz.dogold.andemos.umengtest"
         minSdkVersion 19
-        targetSdkVersion 26
+        targetSdkVersion TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
 

@@ -1,1 +1,3 @@
+include ':bubble'
 include ':touchevents', ':widgets', ':network', ':sensors', ':common', ':system', ':sharing', ':av', ':storage', ':umengtest', ':ijkplayerdemo', ':arouterdemo', ':pinnedrefreshrecyclerview', ':jnilearning', 'opengles'
+include ':processandthread'

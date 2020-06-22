@@ -3,12 +3,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion COMPILE_SDK_VERSION
 
     defaultConfig {
         applicationId "com.dogold.andemos.touchevents"
         minSdkVersion 22
-        targetSdkVersion 29
+        targetSdkVersion TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
 

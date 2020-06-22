@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion COMPILE_SDK_VERSION
 
 
 
     defaultConfig {
         applicationId "li.glorin.andemos.ijkplayerdemo"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
 

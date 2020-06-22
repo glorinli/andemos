@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion COMPILE_SDK_VERSION
 
 
 
     defaultConfig {
         applicationId "com.glorin.pinnedrefreshrecyclerview"
         minSdkVersion 15
-        targetSdkVersion 28
+        targetSdkVersion TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
 

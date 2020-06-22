@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion COMPILE_SDK_VERSION
 
     defaultConfig {
         applicationId "xyz.dogold.andemos.sensors"
         minSdkVersion 19
-        targetSdkVersion 25
+        targetSdkVersion TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
 
