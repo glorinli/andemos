@@ -12,7 +12,7 @@ import java.util.concurrent.Executors
 import kotlin.math.log
 
 object ApiManager {
-    private const val BASE_URL_COVEO = "https://platform.cloud.coveo.com/"
+    const val BASE_URL_COVEO = "https://platform.cloud.coveo.com/"
 
     private val okHttpClient: OkHttpClient by lazy {
         val logger = HttpLoggingInterceptor {
@@ -20,20 +20,9 @@ object ApiManager {
         }
         logger.level = HttpLoggingInterceptor.Level.BASIC
 
-        val tokenInterceptor = Interceptor { chain ->
-            if (chain.request().url().toString().contains(BASE_URL_COVEO)) {
-                val request = chain.request().newBuilder()
-                    .addHeader("Authorization", "Bearer xx854468e8-1a94-4988-bc3e-dddd23c56930")
-                    .build()
-                chain.proceed(request)
-            } else {
-                chain.proceed(chain.request())
-            }
-        }
-
         OkHttpClient.Builder()
             .addInterceptor(logger)
-            .addInterceptor(tokenInterceptor)
+            .addInterceptor(CoveoInterceptor())
             .build()
     }
 
