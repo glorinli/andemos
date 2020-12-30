@@ -15,6 +15,12 @@ class SearchResultViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bind(item: SearchResult?) {
         tvTitle.text = item?.title ?: "Placeholder Item"
         tvSubtitle.text = item?.excerpt ?: "Placeholder Item Subtitle"
+
+        itemView.setOnClickListener {
+            item?.let {
+                SearchHelper.openSearchResult(it, itemView.context)
+            }
+        }
     }
 
     companion object {

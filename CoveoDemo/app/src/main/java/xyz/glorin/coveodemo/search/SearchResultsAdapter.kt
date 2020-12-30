@@ -15,6 +15,10 @@ class SearchResultsAdapter :
         holder.bind(getItem(position))
     }
 
+    public override fun getItem(position: Int): SearchResult? {
+        return super.getItem(position)
+    }
+
     companion object {
         val SEARCH_RESULT_COMPARATOR = object : DiffUtil.ItemCallback<SearchResult>() {
             override fun areItemsTheSame(oldItem: SearchResult, newItem: SearchResult): Boolean {
