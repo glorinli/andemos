@@ -10,9 +10,11 @@ import xyz.glorin.coveodemo.model.SearchResult
 
 class SearchResultViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val tvTitle = view.findViewById<TextView>(R.id.tvTitle)
+    private val tvSubtitle = view.findViewById<TextView>(R.id.tvSubtitle)
 
     fun bind(item: SearchResult?) {
         tvTitle.text = item?.title ?: "Placeholder Item"
+        tvSubtitle.text = item?.excerpt ?: "Placeholder Item Subtitle"
     }
 
     companion object {

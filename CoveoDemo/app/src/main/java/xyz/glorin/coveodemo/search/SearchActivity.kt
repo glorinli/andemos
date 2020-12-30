@@ -7,13 +7,16 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import xyz.glorin.coveodemo.KeyboardUtil
 import xyz.glorin.coveodemo.R
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var etKeyword: EditText
+    private lateinit var rvSearchResults: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,18 +50,26 @@ class SearchActivity : AppCompatActivity() {
     private fun fireSearch() {
         etKeyword.text.toString().trim().let {
             if (!TextUtils.isEmpty(it)) {
-                searchViewModel.search(it)
+                if (searchViewModel.search(it)) {
+                    rvSearchResults.scrollToPosition(0)
+                    (rvSearchResults.adapter as? SearchResultsAdapter)?.submitList(null)
+                    KeyboardUtil.hideKeyBoard(etKeyword)
+                }
             }
         }
     }
 
     private fun initSearchResults() {
-        val recyclerView = findViewById<RecyclerView>(R.id.rvSearchResults)
         val adapter = SearchResultsAdapter()
-        searchViewModel.searchResults.pagedList.observe(this) {
+        searchViewModel.searchResults.observe(this) {
             adapter.submitList(it)
         }
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
+        rvSearchResults = findViewById<RecyclerView>(R.id.rvSearchResults).apply {
+            this.adapter = adapter
+            layoutManager =
+                LinearLayoutManager(this@SearchActivity, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(DividerItemDecoration(this@SearchActivity, DividerItemDecoration.VERTICAL))
+        }
     }
 }

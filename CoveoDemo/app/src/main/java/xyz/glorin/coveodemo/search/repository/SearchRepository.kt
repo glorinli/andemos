@@ -8,8 +8,9 @@ import xyz.glorin.coveodemo.model.Listing
 import xyz.glorin.coveodemo.model.SearchResult
 
 class SearchRepository {
-    fun searchResults(): Listing<SearchResult> {
-        val sourceFactory = SearchDataSourceFactory()
+
+    fun searchResults(keyword: String): Listing<SearchResult> {
+        val sourceFactory = SearchDataSourceFactory(keyword)
         val livePagedList = sourceFactory.toLiveData(
             config = Config(
                 pageSize = 20,

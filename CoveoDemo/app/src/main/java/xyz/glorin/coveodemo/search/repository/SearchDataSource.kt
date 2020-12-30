@@ -9,9 +9,8 @@ import xyz.glorin.coveodemo.model.NetworkState
 import xyz.glorin.coveodemo.model.SearchResponse
 import xyz.glorin.coveodemo.model.SearchResult
 
-class SearchDataSource : PositionalDataSource<SearchResult>() {
+class SearchDataSource(private val keyword: String) : PositionalDataSource<SearchResult>() {
     private val coveoApi = ApiManager.coveoApi
-    var keyword = "Java"
 
     /**
      * There is no sync on the state because paging will always call loadInitial first then wait
