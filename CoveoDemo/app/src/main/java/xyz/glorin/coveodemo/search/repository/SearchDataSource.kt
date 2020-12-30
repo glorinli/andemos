@@ -27,6 +27,9 @@ class SearchDataSource(private val keyword: String) : PositionalDataSource<Searc
         params: LoadInitialParams,
         callback: LoadInitialCallback<SearchResult>
     ) {
+        networkState.postValue(NetworkState.LOADING)
+        initialLoad.postValue(NetworkState.LOADING)
+
         val firstResult = params.requestedStartPosition
         val numberOfResults = params.requestedLoadSize
         coveoApi.getSearchResults(firstResult, numberOfResults, keyword).enqueue(
@@ -38,13 +41,18 @@ class SearchDataSource(private val keyword: String) : PositionalDataSource<Searc
                     if (response.isSuccessful) {
                         callback.onResult(response.body()?.results ?: emptyList(), firstResult)
                         networkState.postValue(NetworkState.LOADED)
+                        initialLoad.postValue(NetworkState.LOADED)
                     } else {
-                        networkState.postValue(NetworkState.error("Fail to load: ${response.code()}"))
+                        val error = NetworkState.error("Fail to load: ${response.code()}")
+                        networkState.postValue(error)
+                        initialLoad.postValue(error)
                     }
                 }
 
                 override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                    networkState.postValue(NetworkState.error("Fail to load: ${t.message}"))
+                    val error = NetworkState.error("Fail to load: ${t.message}")
+                    networkState.postValue(error)
+                    initialLoad.postValue(error)
                 }
 
             }
@@ -52,6 +60,7 @@ class SearchDataSource(private val keyword: String) : PositionalDataSource<Searc
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<SearchResult>) {
+        networkState.postValue(NetworkState.LOADING)
         val firstResult = params.startPosition
         val numberOfResults = params.loadSize
         coveoApi.getSearchResults(firstResult, numberOfResults, keyword).enqueue(

@@ -10,13 +10,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import xyz.glorin.coveodemo.KeyboardUtil
 import xyz.glorin.coveodemo.R
+import xyz.glorin.coveodemo.model.NetworkState
+import xyz.glorin.coveodemo.model.Status
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var etKeyword: EditText
     private lateinit var rvSearchResults: RecyclerView
+    private lateinit var swipeRefresh: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +79,15 @@ class SearchActivity : AppCompatActivity() {
                     DividerItemDecoration.VERTICAL
                 )
             )
+        }
+
+        swipeRefresh = findViewById(R.id.swipeRefresh)
+        swipeRefresh.setOnRefreshListener {
+            searchViewModel.refresh()
+        }
+
+        searchViewModel.refreshState.observe(this) {
+            swipeRefresh.isRefreshing = it == NetworkState.LOADING
         }
     }
 }

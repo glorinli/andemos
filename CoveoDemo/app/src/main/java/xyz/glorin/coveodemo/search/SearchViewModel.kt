@@ -17,6 +17,8 @@ class SearchViewModel : ViewModel() {
     }
 
     val searchResults = repoResult.switchMap { it.pagedList }
+    val networkState = repoResult.switchMap { it.networkState }
+    val refreshState = repoResult.switchMap { it.refreshState }
 
     fun search(keyword: String): Boolean {
         if (keywords.value != keyword) {
@@ -25,5 +27,9 @@ class SearchViewModel : ViewModel() {
         }
 
         return false
+    }
+
+    fun refresh() {
+        repoResult.value?.refresh?.invoke()
     }
 }
