@@ -33,7 +33,7 @@ class SearchDataSource(private val keyword: String) : PositionalDataSource<Searc
         val firstResult = params.requestedStartPosition
         val numberOfResults = params.requestedLoadSize
         val searchResults = if (keyword.isEmpty())
-            coveoApi.getFaq()
+            coveoApi.getFaq(firstResult, numberOfResults)
         else
             coveoApi.getSearchResults(firstResult, numberOfResults, keyword)
 
@@ -68,7 +68,11 @@ class SearchDataSource(private val keyword: String) : PositionalDataSource<Searc
         networkState.postValue(NetworkState.LOADING)
         val firstResult = params.startPosition
         val numberOfResults = params.loadSize
-        coveoApi.getSearchResults(firstResult, numberOfResults, keyword).enqueue(
+        val searchResults = if (keyword.isEmpty())
+            coveoApi.getFaq(firstResult, numberOfResults)
+        else
+            coveoApi.getSearchResults(firstResult, numberOfResults, keyword)
+        searchResults.enqueue(
             object : retrofit2.Callback<SearchResponse> {
                 override fun onResponse(
                     call: Call<SearchResponse>,
