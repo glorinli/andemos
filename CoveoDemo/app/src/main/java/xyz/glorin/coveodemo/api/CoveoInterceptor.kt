@@ -8,7 +8,7 @@ class CoveoInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         return if (chain.request().url().toString().contains(ApiManager.BASE_URL_COVEO)) {
             val request = chain.request().newBuilder()
-                .addHeader("Authorization", "Bearer xx854468e8-1a94-4988-bc3e-dddd23c56930")
+                .addHeader("Authorization", "Bearer xx6b84a277-41b6-47d2-a116-6cb8a954e864")
                 .url(
                     chain.request()
                         .url()
