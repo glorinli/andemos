@@ -16,4 +16,7 @@ interface CoveoApi {
 
     @GET("rest/search/v2/querySuggest")
     fun getSearchSuggests(@Query("q") query: String): Call<SearchSuggestResponse>
+
+    @GET("rest/search/v2?aq=@faq=true")
+    fun getFaq(): Call<SearchResponse>
 }

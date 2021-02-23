@@ -43,9 +43,10 @@ class SearchActivity : AppCompatActivity(), ISearchSuggestorHost {
     }
 
     private fun initSearchSuggest() {
-        suggestor = supportFragmentManager.findFragmentByTag("searchSuggestFragment") as? ISearchSuggestor
+        suggestor =
+            supportFragmentManager.findFragmentByTag("searchSuggestFragment") as? ISearchSuggestor
 
-        etKeyword.addTextChangedListener(object: TextWatcher {
+        etKeyword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
@@ -84,13 +85,11 @@ class SearchActivity : AppCompatActivity(), ISearchSuggestorHost {
 
     private fun fireSearch() {
         etKeyword.text.toString().trim().let {
-            if (!TextUtils.isEmpty(it)) {
-                if (searchViewModel.search(it)) {
-                    rvSearchResults.scrollToPosition(0)
-                    (rvSearchResults.adapter as? SearchResultsAdapter)?.submitList(null)
-                    KeyboardUtil.hideKeyBoard(etKeyword)
-                    suggestor?.hideSuggests()
-                }
+            if (searchViewModel.search(it)) {
+                rvSearchResults.scrollToPosition(0)
+                (rvSearchResults.adapter as? SearchResultsAdapter)?.submitList(null)
+                KeyboardUtil.hideKeyBoard(etKeyword)
+                suggestor?.hideSuggests()
             }
         }
     }

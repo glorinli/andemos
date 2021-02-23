@@ -8,12 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        AppCompatTextView
 
         findViewById<TextView>(R.id.tvInfo).text =
             "LayoutInflater hashCode: ${LayoutInflater.from(this).hashCode()}\n" +
