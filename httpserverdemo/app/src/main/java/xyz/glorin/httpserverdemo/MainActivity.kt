@@ -15,8 +15,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        findViewById<TextView>(R.id.ipv4Address).text = NetworkUtil.getIpV4Address()
-        findViewById<TextView>(R.id.ipv6Address).text = NetworkUtil.getIpV6Address()
+        findViewById<TextView>(R.id.ipv4Address).text = NetworkUtil.getIpV4Address()?.let {
+            "http://$it:8478"
+        } ?: "N/A"
+        findViewById<TextView>(R.id.ipv6Address).text = NetworkUtil.getIpV6Address()?.let {
+            "http://[$it]:8478"
+        } ?: "N/A"
 
         btnToggleServer = findViewById(R.id.toggleServer)
         btnToggleServer.setOnClickListener {
