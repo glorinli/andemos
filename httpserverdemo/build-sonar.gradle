@@ -3,7 +3,7 @@ apply plugin: "org.sonarqube"
 sonarqube {
     properties {
         property "sonar.projectName", "HttpServerDemo"
-        property "sonar.host.url", "https://127.0.01:9000"
+        property "sonar.host.url", "http://127.0.0.1:9000"
         property "sonar.projectKey", "HttpServerDemo"
         property "sonar.language", "kotlin"
         property "sonar.binaries", "build"
