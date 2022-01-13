@@ -9,6 +9,7 @@ sonarqube {
         property "sonar.binaries", "build"
         property "sonar.sourceEncoding", "UTF-8"
         property "sonar.login", "84c047132e6812039aa221a238382a68a50cf649"
+        property "sonar.anitizer.skip", "true"
     }
 }
 
