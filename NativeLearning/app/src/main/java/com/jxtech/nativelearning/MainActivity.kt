@@ -10,6 +10,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    private val primitiveTypes = PrimitiveTypes()
+    private val fieldsAndMethods = FieldsAndMethods();
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -17,8 +20,25 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Example of a call to a native method
-        binding.sampleText.text = stringFromJNI() + "\n" + NativeLib().stringFromJNI()
+        binding.sampleText.text = stringFromJNI() + "\n" +
+                NativeLib().stringFromJNI() + "\n" +
+                callPlus() + "\n" +
+                callSumOfFloatArray() + "\n\n" +
+                callChangeName()
     }
+
+    private fun callChangeName(): String {
+        return fieldsAndMethods.callChangeName()
+    }
+
+    private fun callSumOfFloatArray(): String {
+        val array = arrayOf(1.3f, 2.8f, 3.3f).toFloatArray()
+        val sum = primitiveTypes.sumOfFloatArray(array = array)
+        return "sum of array is $sum"
+    }
+
+    private fun callPlus() =
+        "10 + 4 = ${primitiveTypes.plus(10, 4)}"
 
     /**
      * A native method that is implemented by the 'nativelearning' native library,
