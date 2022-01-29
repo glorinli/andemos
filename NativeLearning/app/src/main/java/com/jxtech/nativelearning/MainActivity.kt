@@ -25,6 +25,10 @@ class MainActivity : AppCompatActivity() {
                 callPlus() + "\n" +
                 callSumOfFloatArray() + "\n\n" +
                 callChangeName()
+
+        binding.btnExceptions.setOnClickListener {
+            Exceptions.run()
+        }
     }
 
     private fun callChangeName(): String {
