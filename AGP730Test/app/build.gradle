@@ -62,11 +62,17 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
 
-android.applicationVariants.all { variant ->
-    def flavors = variant.productFlavors
-    def brand = flavors[0].name
-    def dist = flavors[1].name
-    def type = variant.buildType.name
+//android.applicationVariants.all { variant ->
+//    def flavors = variant.productFlavors
+//    def brand = flavors[0].name
+//    def dist = flavors[1].name
+//    def type = variant.buildType.name
+//
+//    android.sourceSets."$brand".java.srcDirs += ['src/thirdparty/firebase/real/java']
+//}
 
-    android.sourceSets."$brand".java.srcDirs += ['src/thirdparty/firebase/real/java']
+android.sourceSets.main.java.srcDirs += ['src/thirdparty/firebase/real/java']
+
+android.sourceSets.each { item ->
+    println("item $item")
 }
