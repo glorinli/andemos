@@ -68,12 +68,16 @@ android.applicationVariants.all { variant ->
     def dist = flavors[1].name
     def type = variant.buildType.name
 
-//    android.sourceSets."$brand".java.srcDirs += ['src/thirdparty/firebase/real/java']
-    android.sourceSets."$brand".java.srcDirs += ['src/main/thirdparty/firebase/real/java']
+    android.sourceSets."$brand".java.srcDirs += ['src/thirdparty/firebase/real/java']
+//    android.sourceSets."$brand".java.srcDirs += ['src/main/thirdparty/firebase/real/java']
+
+    android.sourceSets."$brand".java.srcDirs.each { item ->
+        println("item ${item.getClass()}")
+    }
 }
 
 //android.sourceSets.main.java.srcDirs += ['src/thirdparty/firebase/real/java']
 
-android.sourceSets.each { item ->
-    println("item $item")
-}
+//android.sourceSets.each { item ->
+//    println("item ${item.getClass()}")
+//}
